@@ -17,6 +17,10 @@ body {
   font-weight: normal;
   line-height: 1;
 }
+.form-control:focus{
+  box-shadow: 0 0 0 0.25rem rgba(243, 76, 30, 0.25) !important;
+  border-color: var(--primary);
+}
 .error-font {
   font-size: 0.825rem;
 }
