@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modal = new bootstrap.Modal(modalElement);
     const submitButton = document.querySelector('button[type="submit"]');
 
-    // Function to toggle remarks div visibility and clear errors
+    // Function to toggle remarks div visibility and clear errors (existing function remains unchanged)
     function toggleRemarks(radioGroupName, remarksDivId, errorId, remarksErrorId) {
         const radios = document.getElementsByName(radioGroupName);
         const remarksDiv = document.getElementById(remarksDivId);
@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Apply function to each question
+    // Apply function to each question (existing)
     toggleRemarks("question", "question_remarks", "question_error", "question_remarkserror");
     toggleRemarks("question_1", "question_1_remarks", "question_1_error", "question_1_remarkserror");
     toggleRemarks("question_2", "question_2_remarks", "question_2_error", "question_2_remarkserror");
@@ -66,9 +66,42 @@ document.addEventListener("DOMContentLoaded", function () {
     toggleRemarks("question_26", "question_26_remarks", "question_26_error", "question_26_remarkserror");
     toggleRemarks("question_27", "question_27_remarks", "question_27_error", "question_27_remarkserror");
 
+    // New validation for Date, Department, and Job Title
     form.addEventListener("submit", function (event) {
         event.preventDefault();
         let isValid = true;
+
+        // Validate Date
+        const dateInput = document.getElementById("date");
+        const dateError = document.getElementById("date_error");
+        if (!dateInput.value.trim()) {
+            isValid = false;
+            dateError.textContent = "Date is required.";
+        } else {
+            dateError.textContent = "";
+        }
+
+        // Validate Department
+        const department1Input = document.getElementById("department1");
+        const departmentError = document.getElementById("department_error");
+        if (!department1Input.value.trim()) {
+            isValid = false;
+            departmentError.textContent = "Department is required.";
+        } else {
+            departmentError.textContent = "";
+        }
+
+        // Validate Job Title
+        const department2Input = document.getElementById("department2");
+        const jobTitleError = document.getElementById("jobtile_error");
+        if (!department2Input.value.trim()) {
+            isValid = false;
+            jobTitleError.textContent = "Job Title is required.";
+        } else {
+            jobTitleError.textContent = "";
+        }
+
+        // Validate the existing fields (questions and remarks)
         const fields = [
             { name: "question", errorId: "question_error", remarksId: "question_remarks", remarksErrorId: "question_remarkserror" },
             { name: "question_1", errorId: "question_1_error", remarksId: "question_1_remarks", remarksErrorId: "question_1_remarkserror" },
@@ -123,6 +156,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             }
         });
+        if (!isValid) {
+            // Expand all accordion sections if validation fails
+            document.querySelectorAll("#question_accordion .accordion-collapse").forEach(item => {
+                item.classList.add("show");
+            });
+            return;
+        } else {
+            // Collapse all accordion sections if validation passes
+            document.querySelectorAll("#question_accordion .accordion-collapse").forEach(item => {
+                item.classList.remove("show");
+            });
+        }
+
 
         // If valid, show modal
         if (isValid) {
@@ -133,10 +179,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 submitButton.disabled = false;
                 submitButton.innerHTML = "Final Submit";
                 form.reset();
+                // Reset remarks fields
                 fields.forEach(field => {
                     document.getElementById(field.remarksId).classList.add("d-none");
                 });
-            }, 1000);
+                // Reset Date, Department, and Job Title fields
+                dateInput.value = "";
+                department1Input.value = "";
+                department2Input.value = "";
+            }, 2000);
         }
     });
 });
